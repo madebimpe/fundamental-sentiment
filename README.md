@@ -1,6 +1,6 @@
-# Intel Strategy — Beta
+# Fundamental Sentiment - Project V1
 
-Discretionary buy/hold/sell signal for INTC built from sentiment + fundamentals.
+Discretionary buy/hold/sell signal for ticker (INTC) built from sentiment + fundamentals.
 Composite score (0–100) → BUY ≥65, SELL ≤35, HOLD otherwise.
 
 ## Quick start in VS Code
@@ -45,7 +45,7 @@ intel-strategy/
   performance.py           # vs-SPY metrics
   data/
     fundamentals.py        # 5-metric percentile rank vs peers
-    sentiment.py           # StockTwits + FinBERT
+    sentiment.py           # RSS
   output/                  # JSON results + run.log (gitignored)
   cache/                   # FinBERT cache (gitignored)
   .vscode/                 # workspace settings and launch configs
@@ -63,7 +63,7 @@ intel-strategy/
 | TTM FCF yield | higher better | 20% |
 | Net debt / TTM EBITDA | lower better | 15% |
 
-**Sentiment (50% weight, refresh daily)** — StockTwits stream → FinBERT → recency-weighted mean. 0–100 with 50 neutral.
+**Sentiment (50% weight, refresh daily)** — Currently using RSS for pulling sentiment from headlines (plan to optimize utilizing Reddit or Twitter APIs → recency-weighted mean. 0–100 with 50 neutral.
 
 **Performance metrics** (decoupled from the signal — these tell you how the underlying *asset* has behaved, not what to do):
 - Beta, Alpha (annualized)
@@ -88,14 +88,10 @@ Edit `config.yaml`:
 
 - [x] Config + skeleton
 - [x] Fundamentals (5 metrics, percentile rank vs peers)
-- [x] Sentiment (StockTwits + FinBERT, recency-weighted)
+- [x] Sentiment (RSS, needs to be further optimized)
 - [x] Composite signal + buy/hold/sell
 - [x] Performance metrics vs SPY
 - [ ] Streamlit dashboard (next)
 - [ ] IBKR paper trading integration (later)
 
-## Known caveats
 
-- yfinance is free and convenient but can occasionally rename row labels between versions. The fundamentals module is defensive against minor label drift but a major rename will require a code update.
-- StockTwits' `$INTC` stream is heavily retail; expect noisy days. The recency weighting and distribution stats help diagnose this.
-- FinBERT first-run downloads ~440MB to your HuggingFace cache. After that, scoring 30 messages takes ~2 seconds on CPU.

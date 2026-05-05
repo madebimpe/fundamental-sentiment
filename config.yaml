@@ -1,0 +1,58 @@
+# ---- Target & comp set ----
+target:
+  ticker: INTC
+  name: Intel Corporation
+
+# Hardcoded peers for the beta. Edit here when expanding.
+peers:
+  - AMD
+  - NVDA
+  - QCOM
+  - AVGO
+  - TXN
+  - MU
+  - TSM
+
+# ---- Fundamentals leg ----
+fundamentals:
+  weights:
+    ev_ebitda:           0.25   # lower is better
+    revenue_cagr_2y:     0.20   # higher is better
+    gross_margin_trend:  0.20   # higher is better (TTM vs prior TTM)
+    fcf_yield:           0.20   # higher is better
+    net_debt_ebitda:     0.15   # lower is better
+  refresh_days: 7
+
+# ---- Sentiment leg ----
+sentiment:
+  weights:
+    reddit:     0.70
+    news:       0.30
+  refresh_hours: 24
+  reddit:
+    subreddits: [intel, hardware, stocks, wallstreetbets]
+    lookback_hours: 24
+    max_items: 100
+  news:
+    feeds:
+      - "https://feeds.finance.yahoo.com/rss/2.0/headline?s=INTC&region=US&lang=en-US"
+      - "https://seekingalpha.com/api/sa/combined/INTC.xml"
+
+# ---- Composite & decision ----
+composite:
+  sentiment_weight:    0.50
+  fundamentals_weight: 0.50
+  thresholds:
+    buy:  65
+    sell: 35
+
+# ---- Performance ----
+performance:
+  benchmark: SPY
+  lookback_days: 252      # ~1 trading year
+  risk_free_rate: 0.045   # 3M T-bill, configurable
+  var_confidence: 0.95
+
+paths:
+  cache:  cache
+  output: output
